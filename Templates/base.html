@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block titulo %}Copa Mundial 2026{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+:root{--noche:#08170F;--pasto:#0E4B33;--cesped:#1E8E5A;--oro:#F2C230;--oro2:#FFE27A;--naranja:#F2802C;--linea:#E4EDE7;--tinta:#14201A;--gris:#5A6A61;--fondo:#EEF3EF;--borde:#D6E0D9;--rojo:#D62839}
+*{box-sizing:border-box;margin:0}
+body{font:400 1.0625rem/1.55 "Source Sans 3",system-ui,sans-serif;color:var(--tinta);background:repeating-linear-gradient(90deg,#EEF3EF 0 90px,#E7EEE9 90px 180px);min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--cesped);outline-offset:2px}
+h1,h2,h3,.logo{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-style:italic;text-transform:uppercase;line-height:1.05;letter-spacing:.01em}
+
+/* Estructura */
+.encabezado{background:linear-gradient(180deg,#0C2419,var(--noche));color:#fff;border-bottom:4px solid var(--oro);position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:.5rem 2rem;flex-wrap:wrap;padding:.8rem max(1.25rem,calc((100% - 1120px)/2))}
+.logo{font-size:1.9rem;margin-right:auto}
+nav{display:flex;gap:.25rem 1.5rem;flex-wrap:wrap}
+nav a{position:relative;padding:.35rem 0;color:#BFD0C5;font-weight:600}
+nav a::after{content:"";position:absolute;left:50%;right:50%;bottom:-2px;height:3px;background:var(--oro);transition:left .2s ease,right .2s ease}
+nav a:hover{color:#fff}
+nav a:hover::after{left:0;right:0}
+.contenedor{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:2.5rem 1.25rem}
+footer{position:relative;background:var(--noche);color:#9DB0A5;text-align:center;padding:1.6rem 1.25rem 1.4rem}
+footer::before{content:"";position:absolute;inset:0 0 auto;height:8px;background:repeating-linear-gradient(90deg,var(--cesped) 0 40px,var(--pasto) 40px 80px)}
+@media (max-width:700px){nav{width:100%;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}}
+
+/* Mensajes flash */
+.mensaje{padding:.85rem 1.1rem;border-radius:6px;margin-bottom:1.25rem;background:#fff;border:1px solid var(--borde);border-left:6px solid var(--gris);font-weight:600}
+.mensaje.success,.mensaje.exito{border-left-color:var(--cesped)}
+.mensaje.error,.mensaje.danger{border-left-color:var(--rojo)}
+.mensaje.warning{border-left-color:var(--oro)}
+
+/* Títulos y botones */
+.titulo-principal{width:fit-content;max-width:100%;font-size:clamp(2.4rem,6vw,3.6rem);margin-bottom:2rem;padding:.9rem 5rem .9rem 1.5rem;background:linear-gradient(120deg,var(--noche),#0F2E1E);color:#fff;border-left:10px solid var(--oro);clip-path:polygon(0 0,100% 0,calc(100% - 32px) 100%,0 100%);text-shadow:0 3px 0 rgba(0,0,0,.4)}
+.titulo-seccion{font-size:2.1rem;margin:3.25rem 0 1.25rem;padding-bottom:.6rem;border-bottom:2px solid var(--borde);position:relative}
+.titulo-seccion::before{content:"⚽";margin-right:.5rem;font-size:1.6rem;font-style:normal}
+.titulo-seccion::after{content:"";position:absolute;left:0;bottom:-2px;width:90px;height:4px;background:var(--oro)}
+
+.boton,button{position:relative;overflow:hidden;display:inline-block;isolation:isolate;padding:.85rem 1.9rem;border:0;background:linear-gradient(120deg,var(--oro2),var(--oro) 55%,var(--naranja));color:var(--noche);font:700 1.15rem "Barlow Condensed",sans-serif;font-style:italic;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;border-radius:4px;box-shadow:0 8px 18px -6px rgba(0,0,0,.45),inset 0 -3px 0 rgba(0,0,0,.2);transition:transform .15s ease,box-shadow .15s ease}
+.boton{border-radius:0;padding:.95rem 2.6rem;clip-path:polygon(14px 0,100% 0,calc(100% - 14px) 100%,0 100%)}
+.boton::before,button::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.65) 45%,transparent 60%);transform:translateX(-120%);transition:transform .5s ease}
+.boton:hover,button:hover{transform:translateY(-2px);box-shadow:0 12px 22px -6px rgba(0,0,0,.5),inset 0 -3px 0 rgba(0,0,0,.2)}
+.boton:hover::before,button:hover::before{transform:translateX(120%)}
+.boton:active,button:active{transform:translateY(0) scale(.97)}
+.boton:focus-visible,button:focus-visible{outline-offset:3px}
+.boton.sec{background:transparent;color:#fff;border:2px solid var(--oro);box-shadow:none}
+.boton.sec:hover{background:var(--oro);color:var(--noche)}
+
+/* Portada */
+.hero{position:relative;overflow:hidden;color:#fff;border-radius:10px;border:3px solid #fff;padding:clamp(3rem,9vw,6rem) clamp(1.5rem,6vw,4rem);
+background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400' fill='none' stroke='%23fff' stroke-opacity='.3' stroke-width='3'%3E%3Crect x='10' y='10' width='780' height='380'/%3E%3Cpath d='M400 10v380'/%3E%3Ccircle cx='400' cy='200' r='70'/%3E%3Crect x='10' y='110' width='120' height='180'/%3E%3Crect x='670' y='110' width='120' height='180'/%3E%3C/svg%3E") center/cover no-repeat,radial-gradient(ellipse at 50% -10%,rgba(255,255,255,.25),transparent 65%),repeating-linear-gradient(90deg,#0F5A3B 0 90px,#0B4A31 90px 180px)}
+.hero::after{content:"⚽";position:absolute;right:4%;bottom:-2.5rem;font-size:clamp(8rem,22vw,16rem);line-height:1;opacity:.18;transform:rotate(-12deg)}
+.hero::before{content:"";position:absolute;inset:0 0 0 auto;width:48%;background:repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.4) 14px 15px),repeating-linear-gradient(-45deg,transparent 0 14px,rgba(255,255,255,.4) 14px 15px);opacity:.3;-webkit-mask-image:linear-gradient(to left,#000,transparent);mask-image:linear-gradient(to left,#000,transparent)}
+.hero>div{position:relative;z-index:1}
+.hero h1{font-size:clamp(3.4rem,11vw,7rem);margin-bottom:1.5rem;text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.hero h1::after{content:"";display:block;width:110px;height:8px;background:linear-gradient(90deg,var(--oro),var(--naranja));margin-top:1rem;transform:skewX(-20deg)}
+.hero p{max-width:32rem;font-size:1.25rem;color:#E1ECE5;margin-bottom:2rem}
+
+/* Tarjetas */
+.tarjetas,.equipos{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.tarjeta,.partido,.equipo,.formulario,.noticia,.login-box,.tabla-contenedor{background:#fff;border:1px solid var(--borde);border-radius:8px;box-shadow:0 10px 24px -16px rgba(8,23,15,.4);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.tarjeta:hover,.equipo:hover,.noticia:hover{transform:translateY(-4px);box-shadow:0 16px 30px -14px rgba(8,23,15,.5);border-color:var(--cesped)}
+.tarjeta{position:relative;overflow:hidden;padding:1.7rem 1.4rem 1.4rem}
+.tarjeta::before,.equipo::before{content:"";position:absolute;inset:0 0 auto;height:6px;background:repeating-linear-gradient(90deg,var(--cesped) 0 20px,var(--pasto) 20px 40px)}
+.tarjeta h2,.tarjeta h3{font-size:1.75rem;margin-bottom:.7rem}
+.tarjetas>.tarjeta:only-child{grid-column:1/-1;text-align:center}
+.tarjeta strong{padding:.05rem .6rem;border-radius:3px;background:var(--oro);color:var(--noche)}
+.tarjeta p{color:var(--gris)}
+.tarjeta h3 span,.partido h2 span{display:inline-block;margin:0 .35rem;padding:.1rem .6rem;background:linear-gradient(120deg,var(--oro2),var(--oro));color:var(--noche);font:700 .85rem/1.5 "Barlow Condensed",sans-serif;letter-spacing:.06em;vertical-align:middle;transform:skewX(-12deg);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.tarjeta:has(h3 span){background:var(--noche);border-color:var(--noche);color:#fff;text-align:center}
+.tarjeta:has(h3 span) p{color:#B9CBBF}
+.tarjeta.eliminado::before{background:var(--rojo)}
+.tarjeta.eliminado::after{content:"";position:absolute;top:-4px;right:1.2rem;width:24px;height:34px;background:var(--rojo);border-radius:3px;transform:rotate(8deg);box-shadow:0 4px 8px -2px rgba(0,0,0,.35)}
+.tarjeta.eliminado h2{font-size:1.75rem;margin-bottom:.7rem;padding-right:2rem}
+.tarjeta.eliminado p{color:var(--tinta)}
+.tarjeta.eliminado strong{padding:0;background:none;color:inherit}
+
+/* Partidos: marcador */
+.partido{position:relative;background:var(--noche);color:#fff;border:0;overflow:hidden;text-align:center}
+.partido:hover{transform:translateY(-4px);box-shadow:0 18px 32px -14px rgba(0,0,0,.6)}
+.partido>*{position:relative;z-index:1}
+.partido::after{content:"";position:absolute;left:50%;top:52%;width:150px;height:150px;border:3px solid rgba(255,255,255,.08);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+.partido::before{content:"";display:block;height:8px;background:repeating-linear-gradient(90deg,var(--cesped) 0 24px,var(--pasto) 24px 48px)}
+.estado{display:inline-block;margin:1.2rem 0 .3rem;padding:.1rem .9rem;border:1px solid var(--oro);color:var(--oro);border-radius:99px;font-size:.82rem;font-weight:600;letter-spacing:.05em}
+.partido h2{font-size:2rem;margin:.5rem 1rem 1.2rem}
+.datos-partido{background:#0F2A1D;padding:.9rem 1rem;display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem 1.25rem;color:#B9CBBF;font-size:.95rem}
+.datos-partido p{margin:0;color:inherit}
+
+/* Equipos */
+.equipo{position:relative;overflow:hidden;padding:2rem 1rem 1.5rem;text-align:center}
+.bandera{width:88px;height:88px;margin:0 auto .9rem;border-radius:50%;display:grid;place-items:center;font-size:2.7rem;line-height:1;background:linear-gradient(145deg,#fff,var(--linea));border:3px solid var(--oro);box-shadow:0 0 0 4px rgba(242,194,48,.18)}
+.equipo h2{font-size:1.7rem}
+.equipo p{display:inline-block;padding:.1rem .9rem;border-radius:99px;background:var(--noche);color:var(--oro);font-weight:600;font-size:.9rem}
+
+/* Grupos */
+.grupos{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.grupo{background:#fff;border:1px solid var(--borde);border-radius:8px;box-shadow:0 10px 24px -16px rgba(8,23,15,.4);overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}
+.grupo:hover{transform:translateY(-4px);box-shadow:0 16px 30px -14px rgba(8,23,15,.5)}
+.grupo h2{background:linear-gradient(120deg,var(--noche),#0F2E1E);color:var(--oro);font-size:1.8rem;padding:.8rem 1.2rem;border-bottom:4px solid var(--oro)}
+.grupo ul{list-style:none;padding:0}
+.grupo li{display:flex;align-items:center;gap:.8rem;padding:.75rem 1.2rem;border-bottom:1px solid var(--borde);font-weight:600}
+.grupo li:last-child{border-bottom:0}
+.grupo li b{width:1.2rem;font:700 1.3rem "Barlow Condensed",sans-serif;color:var(--pasto)}
+.mini-bandera{flex:none;width:40px;height:28px;display:grid;place-items:center;font-size:1.4rem}
+.mini-bandera img{width:100%;height:100%;object-fit:cover;border-radius:3px;border:1px solid var(--borde)}
+
+/* Jugadores */
+.equipos-jugadores{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.equipo-jugadores{background:#fff;border:1px solid var(--borde);border-radius:8px;box-shadow:0 10px 24px -16px rgba(8,23,15,.4);overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}
+.equipo-jugadores:hover{transform:translateY(-4px);box-shadow:0 16px 30px -14px rgba(8,23,15,.5)}
+.equipo-jugadores h2{display:flex;align-items:center;gap:.6rem;background:linear-gradient(120deg,var(--noche),#0F2E1E);color:var(--oro);font-size:1.5rem;padding:.7rem 1.1rem;border-bottom:4px solid var(--oro)}
+.equipo-jugadores ul{list-style:none;padding:0}
+.equipo-jugadores li{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.1rem;border-bottom:1px solid var(--borde);flex-wrap:wrap}
+.equipo-jugadores li:last-child{border-bottom:0}
+.equipo-jugadores li b{flex:none;width:2rem;height:2rem;display:grid;place-items:center;text-align:center;font:700 1.05rem "Barlow Condensed",sans-serif;font-style:italic;color:var(--noche);background:linear-gradient(145deg,var(--oro2),var(--oro));border-radius:50%;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.nombre-jugador{font-weight:600;text-transform:none;font-style:normal}
+.nombre-jugador em{margin-left:.3rem;padding:0 .4rem;border-radius:99px;background:linear-gradient(120deg,var(--oro2),var(--naranja));color:var(--noche);font:700 .75rem/1.5 "Source Sans 3",sans-serif;font-style:normal}
+.posicion-jugador{margin-left:auto;padding:.05rem .6rem;border-radius:99px;background:var(--linea);color:var(--pasto);font-size:.8rem;font-weight:600}
+.club-jugador{width:100%;color:var(--gris);font-size:.85rem}
+
+/* Noticias */
+.noticias{display:grid;gap:1.25rem}
+.noticia{display:flex;gap:1.5rem;padding:1.4rem;border-left:6px solid var(--oro)}
+.noticia-imagen{flex:none;width:110px;height:110px;border-radius:6px;display:grid;place-items:center;font-size:2.6rem;background:repeating-linear-gradient(90deg,#0F5A3B 0 18px,#0B4A31 18px 36px)}
+.noticia h2{font-size:1.8rem;margin-bottom:.5rem;text-transform:none}
+.noticia p{margin-bottom:.5rem}
+.noticia small{display:inline-block;padding:.05rem .7rem;border-radius:99px;background:var(--linea);color:var(--pasto);font-weight:600;font-size:.85rem}
+@media (max-width:560px){.noticia{flex-direction:column}}
+
+/* Mensajes de lista vacía */
+.tarjetas>p,.equipos>p,.noticias>p,.grupos>p,.equipos-jugadores>p{grid-column:1/-1;padding:2.5rem 1rem;text-align:center;color:var(--gris);background:#fff;border:2px dashed var(--borde);border-radius:8px}
+.tarjetas>p::before,.equipos>p::before,.noticias>p::before,.grupos>p::before,.equipos-jugadores>p::before{content:"⚽";display:block;font-size:2.4rem;margin-bottom:.4rem;filter:grayscale(1);opacity:.6}
+
+/* Formularios */
+.login-container{position:relative;overflow:hidden;display:grid;place-items:center;padding:3rem 1.25rem;border-radius:10px;
+background:radial-gradient(ellipse at 50% -20%,rgba(255,255,255,.18),transparent 60%),repeating-linear-gradient(90deg,#0F5A3B 0 70px,#0B4A31 70px 140px)}
+.login-container::before{content:"";position:absolute;left:50%;top:50%;width:340px;height:340px;border:3px solid rgba(255,255,255,.14);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+.login-container::after{content:"";position:absolute;inset:0;border:3px solid rgba(255,255,255,.22);border-radius:10px;pointer-events:none}
+
+.escudo{width:76px;height:76px;margin:0 auto 1rem;display:grid;place-items:center;font-size:2.4rem;
+background:linear-gradient(145deg,var(--oro2),var(--oro));border-radius:50%;border:4px solid #fff;
+box-shadow:0 8px 18px -6px rgba(0,0,0,.45)}
+
+.login-box,.formulario{position:relative;overflow:hidden;z-index:1;padding:2.25rem;width:100%;border-top:6px solid var(--oro);text-align:center}
+.login-box::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:repeating-linear-gradient(90deg,var(--cesped) 0 20px,var(--pasto) 20px 40px)}
+.login-box{max-width:430px}
+.formulario{max-width:540px;margin-bottom:1rem;outline:2px dashed var(--borde);outline-offset:-12px;text-align:left}
+.formulario .escudo{display:none}
+.login-box h1{font-size:2.4rem;margin-bottom:.3rem}
+.login-box>p{color:var(--gris);margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px dashed var(--borde)}
+.formulario h2{font-size:2rem;margin-bottom:1rem}
+form{text-align:left}
+form label{display:block;font-weight:600;margin:1.1rem 0 .35rem}
+form input,form select{width:100%;padding:.75rem .85rem;border:1px solid var(--borde);border-radius:4px;font:inherit;background:#fff;transition:border-color .15s ease,box-shadow .15s ease}
+form input:focus,form select:focus{border-color:var(--cesped);box-shadow:0 0 0 3px rgba(30,142,90,.15)}
+form button{width:100%;margin-top:1.75rem}
+.registro-texto{text-align:center;margin-top:1.25rem;color:var(--gris)}
+.registro-texto a{color:var(--pasto);font-weight:700;border-bottom:2px solid var(--oro)}
+
+.login-box.admin{border-top-color:var(--rojo)}
+.login-box.admin .escudo{background:linear-gradient(145deg,#ff8a8a,var(--rojo));color:#fff}
+
+/* Tabla */
+.tabla-contenedor{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{padding:.8rem .9rem;text-align:center;border-bottom:1px solid var(--borde)}
+thead th{background:linear-gradient(120deg,var(--noche),#0F2E1E);color:#BFD0C5;font-weight:600;border-bottom:4px solid var(--oro)}
+tbody tr:nth-child(even){background:var(--fondo)}
+tbody tr:hover{background:var(--linea)}
+td:first-child{font:700 1.3rem "Barlow Condensed",sans-serif;color:var(--pasto);background:var(--linea)}
+.equipo-tabla{text-align:left;font-weight:700;text-transform:uppercase}
+td:last-child{font:700 1.35rem "Barlow Condensed",sans-serif;background:var(--noche);color:var(--oro)}
+tbody tr:nth-child(1) td:first-child{background:var(--oro);color:var(--noche)}
+tbody tr:nth-child(2) td:first-child{background:#C5CEC8;color:var(--noche)}
+tbody tr:nth-child(3) td:first-child{background:#D39A62;color:var(--noche)}
+    </style>
+</head>
+
+<body>
+
+<header class="encabezado">
+
+    <div class="logo">
+        ⚽ COPA MUNDIAL 2026
+    </div>
+
+    <nav>
+        {% if session.get('usuario_id') %}
+            <a href="{{ url_for('index') }}">Inicio</a>
+            <a href="{{ url_for('partidos_page') }}">Partidos</a>
+            <a href="{{ url_for('equipos_page') }}">Equipos</a>
+            <a href="{{ url_for('grupos_page') }}">Grupos</a>
+            <a href="{{ url_for('jugadores_page') }}">Jugadores</a>
+            <a href="{{ url_for('clasificados_page') }}">Clasificados</a>
+            <a href="{{ url_for('eliminados_page') }}">Eliminados</a>
+            <a href="{{ url_for('noticias_page') }}">Noticias</a>
+            <a href="{{ url_for('apuestas_page') }}">Apuestas</a>
+            {% if session.get('rol') == 'admin' %}
+                <a href="{{ url_for('admin_panel') }}">Admin</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Usuarios</a>
+            <a href="{{ url_for('registro') }}">Registrarse</a>
+            <a href="{{ url_for('admin_login') }}">Administrador</a>
+        {% endif %}
+    </nav>
+
+</header>
+
+
+<main class="contenedor">
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+
+        {% for categoria, mensaje in mensajes %}
+
+            <div class="mensaje {{ categoria }}">
+                {{ mensaje }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    {% block contenido %}
+
+    {% endblock %}
+
+</main>
+
+
+<footer>
+
+    <p>© 2026 Copa Mundial</p>
+
+</footer>
+
+</body>
+</html>

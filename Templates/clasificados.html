@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Tabla de clasificados
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    📊 Tabla de clasificados
+</h1>
+
+
+<div class="tabla-contenedor">
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>Pos.</th>
+
+            <th>Equipo</th>
+
+            <th>PJ</th>
+
+            <th>PG</th>
+
+            <th>PE</th>
+
+            <th>PP</th>
+
+            <th>GF</th>
+
+            <th>GC</th>
+
+            <th>DG</th>
+
+            <th>PTS</th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+        {% for equipo in equipos %}
+
+        <tr>
+
+            <td>
+                {{ loop.index }}
+            </td>
+
+            <td class="equipo-tabla">
+                {{ equipo.nombre }}
+            </td>
+
+            <td>
+                {{ equipo.pj|default(0) }}
+            </td>
+
+            <td>
+                {{ equipo.pg|default(0) }}
+            </td>
+
+            <td>
+                {{ equipo.pe|default(0) }}
+            </td>
+
+            <td>
+                {{ equipo.pp|default(0) }}
+            </td>
+
+            <td>
+                {{ equipo.goles_favor|default(0) }}
+            </td>
+
+            <td>
+                {{ equipo.goles_contra|default(0) }}
+            </td>
+
+            <td>
+                {{ equipo.diferencia|default(0) }}
+            </td>
+
+            <td>
+                <strong>
+                    {{ equipo.puntos|default(0) }}
+                </strong>
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+
+            <td colspan="10">
+                No hay información disponible.
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

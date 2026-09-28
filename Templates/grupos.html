@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Grupos
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    🏆 Grupos
+</h1>
+
+
+<div class="grupos">
+
+    {% for letra, lista in grupos.items() %}
+
+    <section class="grupo">
+
+        <h2>Grupo {{ letra }}</h2>
+
+        <ul>
+
+            {% for equipo in lista %}
+
+            <li>
+
+                <b>{{ loop.index }}</b>
+
+                <span class="mini-bandera">
+
+                    {% if equipo.codigo %}
+                    <img src="https://flagcdn.com/w80/{{ equipo.codigo|lower }}.png"
+                         alt="Bandera de {{ equipo.nombre }}">
+                    {% else %}
+                    {{ equipo.bandera|default("⚽") }}
+                    {% endif %}
+
+                </span>
+
+                {{ equipo.nombre }}
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </section>
+
+    {% else %}
+
+    <p>
+        No hay grupos registrados.
+    </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

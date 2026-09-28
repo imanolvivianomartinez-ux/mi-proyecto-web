@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Equipos
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    🌎 Equipos
+</h1>
+
+
+<div class="equipos">
+
+    {% for equipo in equipos %}
+
+    <div class="equipo">
+
+        <div class="bandera">
+
+            {% if equipo.codigo %}
+            <img src="https://flagcdn.com/w160/{{ equipo.codigo|lower }}.png"
+                 alt="Bandera de {{ equipo.nombre }}">
+            {% else %}
+            {{ equipo.bandera|default("⚽") }}
+            {% endif %}
+
+        </div>
+
+
+        <h2>
+            {{ equipo.nombre }}
+        </h2>
+
+
+        <p>
+            Grupo {{ equipo.grupo }}
+        </p>
+
+    </div>
+
+    {% else %}
+
+    <p>
+        No hay equipos registrados.
+    </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

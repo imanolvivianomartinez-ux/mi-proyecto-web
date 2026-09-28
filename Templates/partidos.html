@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Partidos
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    ⚽ Partidos
+</h1>
+
+
+<div class="tarjetas">
+
+    {% for partido in partidos %}
+
+    <div class="partido">
+
+        <div class="estado">
+            {{ partido.estado }}
+        </div>
+
+
+        <h2>
+
+            {{ partido.equipo_local }}
+
+            <span>VS</span>
+
+            {{ partido.equipo_visitante }}
+
+        </h2>
+
+
+        <div class="datos-partido">
+
+            <p>
+                📅 {{ partido.fecha }}
+            </p>
+
+            <p>
+                🕐 {{ partido.hora }}
+            </p>
+
+            <p>
+                🏟️ {{ partido.estadio }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+    <p>
+        No hay partidos registrados.
+    </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

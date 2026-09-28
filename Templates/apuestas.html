@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Apuestas
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    🎯 Mis apuestas
+</h1>
+
+
+<div class="formulario">
+
+    <h2>Realizar apuesta</h2>
+
+
+    <form method="POST">
+
+        <label>
+            Selecciona un partido
+        </label>
+
+
+        <select name="partido_id" required>
+
+            <option value="">
+                Selecciona un partido
+            </option>
+
+
+            {% for partido in partidos %}
+
+            <option value="{{ partido._id }}">
+
+                {{ partido.equipo_local }}
+
+                VS
+
+                {{ partido.equipo_visitante }}
+
+                - {{ partido.fecha }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <label>
+            ¿Quién ganará?
+        </label>
+
+
+        <select name="pronostico" required>
+
+            <option value="">
+                Selecciona
+            </option>
+
+            <option value="Local">
+                {{ "Equipo local" }}
+            </option>
+
+            <option value="Empate">
+                Empate
+            </option>
+
+            <option value="Visitante">
+                Equipo visitante
+            </option>
+
+        </select>
+
+
+        <button type="submit">
+            Guardar apuesta
+        </button>
+
+    </form>
+
+</div>
+
+
+<h2 class="titulo-seccion">
+    Mis apuestas anteriores
+</h2>
+
+
+<div class="tarjetas">
+
+    {% for apuesta in apuestas %}
+
+    <div class="tarjeta">
+
+        <h3>
+            Apuesta registrada
+        </h3>
+
+        <p>
+            Pronóstico:
+            <strong>
+                {{ apuesta.pronostico }}
+            </strong>
+        </p>
+
+        <p>
+            Fecha:
+            {{ apuesta.fecha }}
+        </p>
+
+    </div>
+
+    {% else %}
+
+    <p>
+        Todavía no tienes apuestas.
+    </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

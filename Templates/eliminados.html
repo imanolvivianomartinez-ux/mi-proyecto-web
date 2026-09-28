@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Equipos eliminados
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    ❌ Equipos eliminados
+</h1>
+
+
+<div class="tarjetas">
+
+    {% for equipo in eliminados %}
+
+    <div class="tarjeta eliminado">
+
+        <h2>
+            {{ equipo.nombre }}
+        </h2>
+
+
+        <p>
+
+            <strong>
+                Fase:
+            </strong>
+
+            {{ equipo.fase }}
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Motivo:
+            </strong>
+
+            {{ equipo.motivo }}
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Fecha:
+            </strong>
+
+            {{ equipo.fecha }}
+
+        </p>
+
+    </div>
+
+
+    {% else %}
+
+    <div class="tarjeta">
+
+        <h2>
+            Todavía no hay equipos eliminados.
+        </h2>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

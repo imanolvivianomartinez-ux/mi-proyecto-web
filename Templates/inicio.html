@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Inicio
+{% endblock %}
+
+
+{% block contenido %}
+
+<section class="hero">
+
+    <div>
+
+        <h1>
+            COPA MUNDIAL 2026
+        </h1>
+
+        <p>
+            Toda la información del torneo en un solo lugar.
+        </p>
+
+        <a href="{{ url_for('partidos_page') }}"
+           class="boton">
+
+            Ver partidos
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<h2 class="titulo-seccion">
+    Próximos partidos
+</h2>
+
+
+<div class="tarjetas">
+
+    {% for partido in proximos %}
+
+    <div class="tarjeta">
+
+        <h3>
+
+            {{ partido.equipo_local }}
+
+            <span>VS</span>
+
+            {{ partido.equipo_visitante }}
+
+        </h3>
+
+        <p>
+            📅 {{ partido.fecha }}
+        </p>
+
+        <p>
+            🕐 {{ partido.hora }}
+        </p>
+
+        <p>
+            🏟️ {{ partido.estadio }}
+        </p>
+
+    </div>
+
+    {% else %}
+
+    <div class="tarjeta">
+
+        <h3>No hay partidos todavía</h3>
+
+        <p>
+            Los próximos partidos aparecerán aquí.
+        </p>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+<h2 class="titulo-seccion">
+    Últimas noticias
+</h2>
+
+
+<div class="tarjetas">
+
+    {% for noticia in noticias %}
+
+    <div class="tarjeta">
+
+        <h3>
+            {{ noticia.titulo }}
+        </h3>
+
+        <p>
+            {{ noticia.contenido }}
+        </p>
+
+    </div>
+
+    {% else %}
+
+    <div class="tarjeta">
+
+        <h3>No hay noticias</h3>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

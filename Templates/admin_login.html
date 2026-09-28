@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Acceso de administrador
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="login-container">
+
+    <div class="login-box admin">
+
+        <div class="escudo">🛡️</div>
+
+        <h1>Administrador</h1>
+
+        <p>Acceso exclusivo para administradores</p>
+
+
+        <form method="POST">
+
+            <label>Correo electrónico</label>
+
+            <input type="email" name="correo" placeholder="admin@copamundial.com" required>
+
+
+            <label>Contraseña</label>
+
+            <input type="password" name="password" placeholder="Contraseña" required>
+
+
+            <button type="submit">
+                Entrar como administrador
+            </button>
+
+        </form>
+
+
+        <p class="registro-texto">
+
+            ¿Eres usuario?
+
+            <a href="{{ url_for('login') }}">
+                Inicia sesión aquí
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

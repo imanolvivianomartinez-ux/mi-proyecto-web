@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Crear cuenta
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="login-container">
+
+    <div class="login-box">
+
+        <div class="escudo">⚽</div>
+
+        <h1>Crear cuenta</h1>
+
+        <p>Regístrate para participar</p>
+
+
+        <form method="POST">
+
+            <label>Nombre</label>
+
+            <input
+                type="text"
+                name="nombre"
+                placeholder="Tu nombre"
+                required
+            >
+
+
+            <label>Correo electrónico</label>
+
+            <input
+                type="email"
+                name="correo"
+                placeholder="correo@ejemplo.com"
+                required
+            >
+
+
+            <label>Contraseña</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required
+            >
+
+
+            <button type="submit">
+                Crear cuenta
+            </button>
+
+        </form>
+
+
+        <p class="registro-texto">
+
+            ¿Ya tienes una cuenta?
+
+            <a href="{{ url_for('login') }}">
+                Inicia sesión
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,77 @@
+
+{% extends "base.html" %}
+ 
+{% block titulo %}
+Jugadores
+{% endblock %}
+ 
+ 
+{% block contenido %}
+ 
+<h1 class="titulo-principal">
+    🎽 Jugadores
+</h1>
+ 
+ 
+<div class="equipos-jugadores">
+ 
+    {% for pais, lista in jugadores.items() %}
+ 
+    <section class="equipo-jugadores">
+ 
+        <h2>
+ 
+            {% set equipo = equipos_por_nombre.get(pais) %}
+ 
+            <span class="mini-bandera">
+ 
+                {% if equipo and equipo.codigo %}
+                <img src="https://flagcdn.com/w80/{{ equipo.codigo|lower }}.png"
+                     alt="Bandera de {{ pais }}">
+                {% else %}
+                {{ (equipo.bandera if equipo else None)|default("⚽") }}
+                {% endif %}
+ 
+            </span>
+ 
+            {{ pais }}
+ 
+        </h2>
+ 
+        <ul>
+ 
+            {% for j in lista %}
+ 
+            <li>
+ 
+                {% if j.dorsal %}<b>{{ j.dorsal }}</b>{% endif %}
+ 
+                <span class="nombre-jugador">
+                    {{ j.nombre }}
+                    {% if j.capitan %}<em>C</em>{% endif %}
+                </span>
+ 
+                <span class="posicion-jugador">{{ j.posicion }}</span>
+ 
+                <span class="club-jugador">{{ j.club }}</span>
+ 
+            </li>
+ 
+            {% endfor %}
+ 
+        </ul>
+ 
+    </section>
+ 
+    {% else %}
+ 
+    <p>
+        No hay jugadores registrados.
+    </p>
+ 
+    {% endfor %}
+ 
+</div>
+ 
+{% endblock %}
+ 

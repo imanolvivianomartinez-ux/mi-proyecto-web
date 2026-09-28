@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Noticias
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    📰 Noticias
+</h1>
+
+
+<div class="noticias">
+
+    {% for noticia in noticias %}
+
+    <article class="noticia">
+
+        <div class="noticia-imagen">
+            ⚽
+        </div>
+
+
+        <div>
+
+            <h2>
+                {{ noticia.titulo }}
+            </h2>
+
+
+            <p>
+                {{ noticia.contenido }}
+            </p>
+
+
+            <small>
+                {{ noticia.fecha }}
+            </small>
+
+        </div>
+
+    </article>
+
+    {% else %}
+
+    <p>
+        No hay noticias disponibles.
+    </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
