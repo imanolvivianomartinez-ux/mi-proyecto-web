@@ -1,4 +1,5 @@
 import os
+import certifi
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from pymongo import MongoClient
@@ -10,7 +11,10 @@ app = Flask(__name__)
 app.secret_key = "COPA_MUNDIAL_2026_CLAVE"
 
 URI = "mongodb+srv://vimi090703hmcvrma5_db_user:qgb4fQjc7xIyy0UB@cluster0.nwwzftq.mongodb.net/"
-client = MongoClient(URI)
+
+ca = certifi.where()
+client = MongoClient(URI, tlsCAFile=ca)
+
 db = client["Copamundial2026"]
 usuarios, partidos, equipos, apuestas, noticias, clasificados, eliminados = (
     db[n] for n in ("usuarios", "partidos", "equipos", "apuestas", "noticias", "clasificados", "eliminados")
