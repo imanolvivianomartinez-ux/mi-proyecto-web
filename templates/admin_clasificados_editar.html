@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Editar equipo
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="formulario">
+
+    <h2>Editar: {{ equipo.nombre }}</h2>
+
+    <form method="POST">
+
+        <label>Equipo</label>
+        <input type="text" name="nombre" value="{{ equipo.nombre }}" readonly>
+
+        <label>Partidos jugados</label>
+        <input type="number" name="pj" min="0" value="{{ equipo.pj|default(0) }}" required>
+
+        <label>Ganados</label>
+        <input type="number" name="pg" min="0" value="{{ equipo.pg|default(0) }}" required>
+
+        <label>Empatados</label>
+        <input type="number" name="pe" min="0" value="{{ equipo.pe|default(0) }}" required>
+
+        <label>Perdidos</label>
+        <input type="number" name="pp" min="0" value="{{ equipo.pp|default(0) }}" required>
+
+        <label>Goles a favor</label>
+        <input type="number" name="goles_favor" min="0" value="{{ equipo.goles_favor|default(0) }}" required>
+
+        <label>Goles en contra</label>
+        <input type="number" name="goles_contra" min="0" value="{{ equipo.goles_contra|default(0) }}" required>
+
+        <label>Puntos</label>
+        <input type="number" name="puntos" min="0" value="{{ equipo.puntos|default(0) }}" required>
+
+        <button type="submit">Guardar cambios</button>
+
+    </form>
+
+    <p class="registro-texto">
+        <a href="{{ url_for('admin_clasificados_page') }}">Volver a la lista</a>
+    </p>
+
+</div>
+
+{% endblock %}

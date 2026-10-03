@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Administradores
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    🛡️ Administradores
+</h1>
+
+
+<div class="formulario">
+
+    <h2>Agregar administrador</h2>
+
+    <form method="POST">
+
+        <label>Nombre</label>
+        <input type="text" name="nombre" required>
+
+        <label>Correo electrónico</label>
+        <input type="email" name="correo" placeholder="correo@ejemplo.com" required>
+
+        <label>Contraseña</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">Crear administrador</button>
+
+    </form>
+
+</div>
+
+
+<h2 class="titulo-seccion">
+    Administradores actuales
+</h2>
+
+
+<div class="tabla-contenedor">
+
+<table>
+
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Registrado</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for admin in administradores %}
+
+        <tr>
+            <td class="equipo-tabla">{{ admin.nombre }}</td>
+            <td>{{ admin.correo }}</td>
+            <td>{{ admin.fecha_registro }}</td>
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="3">No hay administradores registrados.</td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

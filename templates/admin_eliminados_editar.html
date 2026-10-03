@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Editar equipo eliminado
+{% endblock %}
+
+
+{% block contenido %}
+
+<div class="formulario">
+
+    <h2>Editar: {{ equipo.nombre }}</h2>
+
+    <form method="POST">
+
+        <label>Equipo</label>
+        <input type="text" name="nombre" value="{{ equipo.nombre }}" readonly>
+
+        <label>Fase en que quedó eliminado</label>
+        <input type="text" name="fase" value="{{ equipo.fase }}" required>
+
+        <label>Motivo</label>
+        <input type="text" name="motivo" value="{{ equipo.motivo }}" required>
+
+        <label>Fecha</label>
+        <input type="date" name="fecha" value="{{ equipo.fecha }}" required>
+
+        <button type="submit">Guardar cambios</button>
+
+    </form>
+
+    <p class="registro-texto">
+        <a href="{{ url_for('admin_eliminados_page') }}">Volver a la lista</a>
+    </p>
+
+</div>
+
+{% endblock %}

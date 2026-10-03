@@ -1,53 +1,51 @@
 {% extends "base.html" %}
 
 {% block titulo %}
-Acceso de administrador
+Panel de administración
 {% endblock %}
 
 
 {% block contenido %}
 
-<div class="login-container">
-
-    <div class="login-box admin">
-
-        <div class="escudo">🛡️</div>
-
-        <h1>Administrador</h1>
-
-        <p>Acceso exclusivo para administradores</p>
+<h1 class="titulo-principal">
+    🛡️ Panel de administración
+</h1>
 
 
-        <form method="POST">
+<div class="tarjetas">
 
-            <label>Correo electrónico</label>
+    {% for nombre, total in conteos.items() %}
 
-            <input type="email" name="correo" placeholder="admin@copamundial.com" required>
+    <div class="tarjeta">
 
+        <h3>{{ nombre|capitalize }}</h3>
 
-            <label>Contraseña</label>
-
-            <input type="password" name="password" placeholder="Contraseña" required>
-
-
-            <button type="submit">
-                Entrar como administrador
-            </button>
-
-        </form>
-
-
-        <p class="registro-texto">
-
-            ¿Eres usuario?
-
-            <a href="{{ url_for('login') }}">
-                Inicia sesión aquí
-            </a>
-
-        </p>
+        <p>{{ total }} registrados</p>
 
     </div>
+
+    {% endfor %}
+
+</div>
+
+
+<h2 class="titulo-seccion">
+    Herramientas
+</h2>
+
+<div class="admin-acciones">
+
+    <a class="boton" href="{{ url_for('admin_clasificados_page') }}">
+        Editar clasificados
+    </a>
+
+    <a class="boton" href="{{ url_for('admin_eliminados_page') }}">
+        Editar eliminados
+    </a>
+
+    <a class="boton sec" href="{{ url_for('admin_administradores_page') }}">
+        Administradores
+    </a>
 
 </div>
 

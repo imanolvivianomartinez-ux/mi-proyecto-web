@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Administrar eliminados
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    🛠️ Administrar eliminados
+</h1>
+
+
+<div class="formulario">
+
+    <h2>Agregar equipo eliminado</h2>
+
+    {% if equipos_disponibles %}
+
+    <form method="POST">
+
+        <label>Equipo</label>
+        <select name="nombre" required>
+            <option value="">Selecciona un equipo</option>
+            {% for equipo in equipos_disponibles %}
+            <option value="{{ equipo.nombre }}">{{ equipo.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Fase en que quedó eliminado</label>
+        <input type="text" name="fase" placeholder="Ej. Octavos de final" required>
+
+        <label>Motivo</label>
+        <input type="text" name="motivo" required>
+
+        <label>Fecha</label>
+        <input type="date" name="fecha" required>
+
+        <button type="submit">Agregar</button>
+
+    </form>
+
+    {% else %}
+
+    <p>Ya están todos los equipos marcados como eliminados.</p>
+
+    {% endif %}
+
+</div>
+
+
+<h2 class="titulo-seccion">
+    Equipos eliminados
+</h2>
+
+
+<div class="tarjetas">
+
+    {% for equipo in eliminados %}
+
+    <div class="tarjeta eliminado">
+
+        <h2>{{ equipo.nombre }}</h2>
+
+        <p><strong>Fase:</strong> {{ equipo.fase }}</p>
+        <p><strong>Motivo:</strong> {{ equipo.motivo }}</p>
+        <p><strong>Fecha:</strong> {{ equipo.fecha }}</p>
+
+        <div class="admin-acciones">
+
+            <a class="boton btn-mini btn-editar"
+               href="{{ url_for('admin_eliminados_editar', id=equipo._id) }}">
+                Editar
+            </a>
+
+            <form method="POST"
+                  action="{{ url_for('admin_eliminados_eliminar', id=equipo._id) }}"
+                  onsubmit="return confirm('¿Eliminar este registro?');">
+                <button type="submit" class="btn-mini btn-eliminar">Eliminar</button>
+            </form>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="tarjeta">
+        <h2>Todavía no hay equipos eliminados.</h2>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

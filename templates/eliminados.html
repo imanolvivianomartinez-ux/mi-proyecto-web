@@ -11,65 +11,33 @@ Equipos eliminados
     ❌ Equipos eliminados
 </h1>
 
-
-<div class="tarjetas">
-
-    {% for equipo in eliminados %}
-
-    <div class="tarjeta eliminado">
-
-        <h2>
-            {{ equipo.nombre }}
-        </h2>
+<span class="en-vivo">
+    <span class="punto-vivo"></span>
+    En vivo
+</span>
 
 
-        <p>
-
-            <strong>
-                Fase:
-            </strong>
-
-            {{ equipo.fase }}
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                Motivo:
-            </strong>
-
-            {{ equipo.motivo }}
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                Fecha:
-            </strong>
-
-            {{ equipo.fecha }}
-
-        </p>
-
-    </div>
-
-
-    {% else %}
-
-    <div class="tarjeta">
-
-        <h2>
-            Todavía no hay equipos eliminados.
-        </h2>
-
-    </div>
-
-    {% endfor %}
-
+<div class="tarjetas" id="eliminados-cuerpo">
+    {% include "_eliminados_tarjetas.html" %}
 </div>
+
+<script>
+(function () {
+    var cuerpo = document.getElementById("eliminados-cuerpo");
+    var anterior = cuerpo.innerHTML;
+
+    setInterval(function () {
+        fetch("{{ url_for('eliminados_fragmento') }}")
+            .then(function (respuesta) { return respuesta.text(); })
+            .then(function (html) {
+                if (html !== anterior) {
+                    cuerpo.innerHTML = html;
+                    anterior = html;
+                }
+            })
+            .catch(function () {});
+    }, 12000);
+})();
+</script>
 
 {% endblock %}

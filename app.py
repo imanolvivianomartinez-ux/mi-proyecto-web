@@ -1,5 +1,4 @@
 import os
-import certifi
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from pymongo import MongoClient
@@ -11,10 +10,7 @@ app = Flask(__name__)
 app.secret_key = "COPA_MUNDIAL_2026_CLAVE"
 
 URI = "mongodb+srv://vimi090703hmcvrma5_db_user:qgb4fQjc7xIyy0UB@cluster0.nwwzftq.mongodb.net/"
-
-ca = certifi.where()
-client = MongoClient(URI, tlsCAFile=ca)
-
+client = MongoClient(URI)
 db = client["Copamundial2026"]
 usuarios, partidos, equipos, apuestas, noticias, clasificados, eliminados = (
     db[n] for n in ("usuarios", "partidos", "equipos", "apuestas", "noticias", "clasificados", "eliminados")
@@ -34,6 +30,13 @@ def buscar(col, id):
 
 def listar(col, campo, orden=1):
     return list(col.find().sort(campo, orden))
+
+
+def convertir_id(documentos):
+    """Convierte el _id de ObjectId a texto para poder usarlo en url_for()."""
+    for documento in documentos:
+        documento["_id"] = str(documento["_id"])
+    return documentos
 
 
 def solo_admin(f):
@@ -130,7 +133,8 @@ def logout():
 @solo_admin
 def admin_panel():
     conteos = {n: db[n].count_documents({}) for n in
-               ("usuarios", "Administrador", "partidos", "equipos", "jugadores", "noticias", "apuestas")}
+               ("usuarios", "Administrador", "partidos", "equipos", "jugadores",
+                "clasificados", "eliminados", "noticias", "apuestas")}
     return render_template("admin.html", conteos=conteos)
 
 
@@ -212,6 +216,181 @@ def eliminados_page():
     return render_template("eliminados.html", eliminados=listar(eliminados, "fecha", -1))
 
 
+# ---------- FRAGMENTOS EN VIVO (consultados por clasificados.html y eliminados.html) ----------
+
+@app.route("/clasificados/fragmento")
+def clasificados_fragmento():
+    lista = list(clasificados.find().sort([("puntos", -1), ("diferencia", -1)]))
+    return render_template("_clasificados_filas.html", equipos=lista)
+
+
+@app.route("/eliminados/fragmento")
+def eliminados_fragmento():
+    return render_template("_eliminados_tarjetas.html", eliminados=listar(eliminados, "fecha", -1))
+
+
+# ---------- ADMINISTRAR CLASIFICADOS (solo administrador) ----------
+
+@app.route("/admin/clasificados", methods=["GET", "POST"])
+@solo_admin
+def admin_clasificados_page():
+    if request.method == "POST":
+        nombre = request.form.get("nombre", "").strip()
+        if not nombre:
+            flash("Selecciona un equipo.", "danger")
+            return redirect(url_for("admin_clasificados_page"))
+        if clasificados.find_one({"nombre": nombre}):
+            flash("Ese equipo ya está en la tabla de clasificados.", "danger")
+            return redirect(url_for("admin_clasificados_page"))
+
+        gf = int(request.form.get("goles_favor", 0) or 0)
+        gc = int(request.form.get("goles_contra", 0) or 0)
+        clasificados.insert_one({
+            "nombre": nombre,
+            "pj": int(request.form.get("pj", 0) or 0),
+            "pg": int(request.form.get("pg", 0) or 0),
+            "pe": int(request.form.get("pe", 0) or 0),
+            "pp": int(request.form.get("pp", 0) or 0),
+            "goles_favor": gf,
+            "goles_contra": gc,
+            "diferencia": gf - gc,
+            "puntos": int(request.form.get("puntos", 0) or 0),
+        })
+        flash("Equipo agregado a la tabla de clasificados.", "success")
+        return redirect(url_for("admin_clasificados_page"))
+
+    lista = list(clasificados.find().sort([("puntos", -1), ("diferencia", -1)]))
+    nombres_usados = {d["nombre"] for d in clasificados.find({}, {"nombre": 1})}
+    disponibles = list(equipos.find({"nombre": {"$nin": list(nombres_usados)}}).sort("nombre", 1))
+    return render_template("admin_clasificados.html", equipos=convertir_id(lista),
+                            equipos_disponibles=disponibles)
+
+
+@app.route("/admin/clasificados/editar/<id>", methods=["GET", "POST"])
+@solo_admin
+def admin_clasificados_editar(id):
+    equipo = buscar(clasificados, id)
+    if not equipo:
+        flash("Ese registro no existe.", "danger")
+        return redirect(url_for("admin_clasificados_page"))
+
+    if request.method == "POST":
+        gf = int(request.form.get("goles_favor", 0) or 0)
+        gc = int(request.form.get("goles_contra", 0) or 0)
+        clasificados.update_one({"_id": equipo["_id"]}, {"$set": {
+            "nombre": request.form.get("nombre", "").strip(),
+            "pj": int(request.form.get("pj", 0) or 0),
+            "pg": int(request.form.get("pg", 0) or 0),
+            "pe": int(request.form.get("pe", 0) or 0),
+            "pp": int(request.form.get("pp", 0) or 0),
+            "goles_favor": gf,
+            "goles_contra": gc,
+            "diferencia": gf - gc,
+            "puntos": int(request.form.get("puntos", 0) or 0),
+        }})
+        flash("Cambios guardados.", "success")
+        return redirect(url_for("admin_clasificados_page"))
+
+    equipo["_id"] = str(equipo["_id"])
+    return render_template("admin_clasificados_editar.html", equipo=equipo)
+
+
+@app.route("/admin/clasificados/eliminar/<id>", methods=["POST"])
+@solo_admin
+def admin_clasificados_eliminar(id):
+    equipo = buscar(clasificados, id)
+    if equipo:
+        clasificados.delete_one({"_id": equipo["_id"]})
+        flash("Equipo eliminado de la tabla.", "success")
+    return redirect(url_for("admin_clasificados_page"))
+
+
+# ---------- ADMINISTRAR ELIMINADOS (solo administrador) ----------
+
+@app.route("/admin/eliminados", methods=["GET", "POST"])
+@solo_admin
+def admin_eliminados_page():
+    if request.method == "POST":
+        nombre = request.form.get("nombre", "").strip()
+        if not nombre:
+            flash("Selecciona un equipo.", "danger")
+            return redirect(url_for("admin_eliminados_page"))
+        if eliminados.find_one({"nombre": nombre}):
+            flash("Ese equipo ya está marcado como eliminado.", "danger")
+            return redirect(url_for("admin_eliminados_page"))
+
+        eliminados.insert_one({
+            "nombre": nombre,
+            "fase": request.form.get("fase", "").strip(),
+            "motivo": request.form.get("motivo", "").strip(),
+            "fecha": request.form.get("fecha", "").strip(),
+        })
+        flash("Equipo eliminado agregado.", "success")
+        return redirect(url_for("admin_eliminados_page"))
+
+    lista = listar(eliminados, "fecha", -1)
+    nombres_usados = {d["nombre"] for d in eliminados.find({}, {"nombre": 1})}
+    disponibles = list(equipos.find({"nombre": {"$nin": list(nombres_usados)}}).sort("nombre", 1))
+    return render_template("admin_eliminados.html", eliminados=convertir_id(lista),
+                            equipos_disponibles=disponibles)
+
+
+@app.route("/admin/eliminados/editar/<id>", methods=["GET", "POST"])
+@solo_admin
+def admin_eliminados_editar(id):
+    equipo = buscar(eliminados, id)
+    if not equipo:
+        flash("Ese registro no existe.", "danger")
+        return redirect(url_for("admin_eliminados_page"))
+
+    if request.method == "POST":
+        eliminados.update_one({"_id": equipo["_id"]}, {"$set": {
+            "nombre": request.form.get("nombre", "").strip(),
+            "fase": request.form.get("fase", "").strip(),
+            "motivo": request.form.get("motivo", "").strip(),
+            "fecha": request.form.get("fecha", "").strip(),
+        }})
+        flash("Cambios guardados.", "success")
+        return redirect(url_for("admin_eliminados_page"))
+
+    equipo["_id"] = str(equipo["_id"])
+    return render_template("admin_eliminados_editar.html", equipo=equipo)
+
+
+@app.route("/admin/eliminados/eliminar/<id>", methods=["POST"])
+@solo_admin
+def admin_eliminados_eliminar(id):
+    equipo = buscar(eliminados, id)
+    if equipo:
+        eliminados.delete_one({"_id": equipo["_id"]})
+        flash("Registro eliminado.", "success")
+    return redirect(url_for("admin_eliminados_page"))
+
+
+# ---------- ADMINISTRAR ADMINISTRADORES (solo administrador; invisible para usuarios) ----------
+
+@app.route("/admin/administradores", methods=["GET", "POST"])
+@solo_admin
+def admin_administradores_page():
+    if request.method == "POST":
+        correo = request.form.get("correo", "").strip().lower()
+        if administradores.find_one({"correo": correo}):
+            flash("Ya existe un administrador con ese correo.", "danger")
+            return redirect(url_for("admin_administradores_page"))
+        administradores.insert_one({
+            "nombre": request.form.get("nombre", "").strip(),
+            "correo": correo,
+            "rol": "admin",
+            "password": generate_password_hash(request.form.get("password", "")),
+            "fecha_registro": datetime.now(),
+        })
+        flash("Administrador creado correctamente.", "success")
+        return redirect(url_for("admin_administradores_page"))
+
+    lista = list(administradores.find().sort("nombre", 1))
+    return render_template("admin_administradores.html", administradores=lista)
+
+
 # ---------- NOTICIAS ----------
 
 @app.route("/noticias")
@@ -285,5 +464,4 @@ def crear_admin():
 crear_admin()
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True, host="127.0.0.1", port=5000)

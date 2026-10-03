@@ -1,0 +1,57 @@
+{% for equipo in equipos %}
+
+<tr>
+
+    <td>
+        {{ loop.index }}
+    </td>
+
+    <td class="equipo-tabla">
+        {{ equipo.nombre }}
+    </td>
+
+    <td>
+        {{ equipo.pj|default(0) }}
+    </td>
+
+    <td>
+        {{ equipo.pg|default(0) }}
+    </td>
+
+    <td>
+        {{ equipo.pe|default(0) }}
+    </td>
+
+    <td>
+        {{ equipo.pp|default(0) }}
+    </td>
+
+    <td>
+        {{ equipo.goles_favor|default(0) }}
+    </td>
+
+    <td>
+        {{ equipo.goles_contra|default(0) }}
+    </td>
+
+    <td>
+        {{ equipo.diferencia|default(0) }}
+    </td>
+
+    <td>
+        <strong>
+            {{ equipo.puntos|default(0) }}
+        </strong>
+    </td>
+
+</tr>
+
+{% else %}
+
+<tr>
+    <td colspan="10">
+        No hay información disponible.
+    </td>
+</tr>
+
+{% endfor %}

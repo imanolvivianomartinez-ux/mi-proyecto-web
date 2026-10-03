@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+Administrar clasificados
+{% endblock %}
+
+
+{% block contenido %}
+
+<h1 class="titulo-principal">
+    🛠️ Administrar clasificados
+</h1>
+
+
+<div class="formulario">
+
+    <h2>Agregar equipo</h2>
+
+    {% if equipos_disponibles %}
+
+    <form method="POST">
+
+        <label>Equipo</label>
+        <select name="nombre" required>
+            <option value="">Selecciona un equipo</option>
+            {% for equipo in equipos_disponibles %}
+            <option value="{{ equipo.nombre }}">{{ equipo.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Partidos jugados</label>
+        <input type="number" name="pj" min="0" value="0" required>
+
+        <label>Ganados</label>
+        <input type="number" name="pg" min="0" value="0" required>
+
+        <label>Empatados</label>
+        <input type="number" name="pe" min="0" value="0" required>
+
+        <label>Perdidos</label>
+        <input type="number" name="pp" min="0" value="0" required>
+
+        <label>Goles a favor</label>
+        <input type="number" name="goles_favor" min="0" value="0" required>
+
+        <label>Goles en contra</label>
+        <input type="number" name="goles_contra" min="0" value="0" required>
+
+        <label>Puntos</label>
+        <input type="number" name="puntos" min="0" value="0" required>
+
+        <button type="submit">Agregar al torneo</button>
+
+    </form>
+
+    {% else %}
+
+    <p>Ya están todos los equipos registrados en la tabla de clasificados.</p>
+
+    {% endif %}
+
+</div>
+
+
+<h2 class="titulo-seccion">
+    Equipos registrados
+</h2>
+
+
+<div class="tabla-contenedor">
+
+<table>
+
+    <thead>
+        <tr>
+            <th>Equipo</th>
+            <th>PJ</th>
+            <th>PG</th>
+            <th>PE</th>
+            <th>PP</th>
+            <th>GF</th>
+            <th>GC</th>
+            <th>DG</th>
+            <th>PTS</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for equipo in equipos %}
+
+        <tr>
+
+            <td class="equipo-tabla">{{ equipo.nombre }}</td>
+            <td>{{ equipo.pj|default(0) }}</td>
+            <td>{{ equipo.pg|default(0) }}</td>
+            <td>{{ equipo.pe|default(0) }}</td>
+            <td>{{ equipo.pp|default(0) }}</td>
+            <td>{{ equipo.goles_favor|default(0) }}</td>
+            <td>{{ equipo.goles_contra|default(0) }}</td>
+            <td>{{ equipo.diferencia|default(0) }}</td>
+            <td><strong>{{ equipo.puntos|default(0) }}</strong></td>
+
+            <td>
+                <div class="admin-acciones">
+
+                    <a class="boton btn-mini btn-editar"
+                       href="{{ url_for('admin_clasificados_editar', id=equipo._id) }}">
+                        Editar
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('admin_clasificados_eliminar', id=equipo._id) }}"
+                          onsubmit="return confirm('¿Eliminar este equipo de la tabla?');">
+                        <button type="submit" class="btn-mini btn-eliminar">Eliminar</button>
+                    </form>
+
+                </div>
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="10">No hay equipos registrados.</td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}
